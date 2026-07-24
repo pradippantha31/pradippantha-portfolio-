@@ -13,7 +13,7 @@ This repository is a personal portfolio built with TanStack Start, React 19, Vit
 - The Vite config is in `vite.config.ts` and uses `@tanstack/react-start/plugin/vite`, `@vitejs/plugin-react`, `@tailwindcss/vite`, and `vite-tsconfig-paths`.
 - The main page is implemented in `src/routes/index.tsx`.
 - The app shell, error handling, and route root are in `src/routes/__root.tsx`.
-- Avoid reintroducing Lovable-specific tooling or wrappers; the project should stay plain Vite + TanStack Start.
+- Keep the project as a plain Vite + TanStack Start portfolio app without extra wrappers or build plugins.
 
 ## Notes
 
