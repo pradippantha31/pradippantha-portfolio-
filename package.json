@@ -1,8 +1,12 @@
 {
-  "name": "tanstack_start_ts",
+  "name": "pradippantha-portfolio",
+  "description": "A personal portfolio website built with TanStack Start, React, Vite, and Tailwind CSS.",
   "private": true,
   "sideEffects": false,
   "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "dev": "vite dev",
     "build": "vite build",
