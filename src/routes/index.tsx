@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 
 const EMAIL = "panthapradip31@gmail.com";
-const GITHUB = "https://github.com/pradippantha31";
+const GITHUB = "https://github.com/pradippantha31/pradippantha-portfolio-";
 
 export const Route = createFileRoute("/")({
   component: Portfolio,
@@ -35,7 +35,7 @@ const experiences = [
     ],
   },
   {
-    year: "2024",
+    year: "2023-2026",
     title: "Coursework & Self-Study",
     role: "CS Student",
     points: [
@@ -121,7 +121,17 @@ function Portfolio() {
         </Section>
 
         <footer className="mt-16 border-t border-border/60 pt-6 text-center text-xs text-muted-foreground">
-          © {new Date().getFullYear()} Pradip Pantha · Built in Kathmandu
+          © {new Date().getFullYear()} Pradip Pantha · SINCE 2003
+          <div className="mt-2">
+            <a
+              href={GITHUB}
+              target="_blank"
+              rel="noreferrer"
+              className="text-primary hover:underline"
+            >
+              View source on GitHub
+            </a>
+          </div>
         </footer>
       </main>
     </div>
