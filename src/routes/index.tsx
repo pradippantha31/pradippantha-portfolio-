@@ -8,7 +8,7 @@ export const Route = createFileRoute("/")({
   component: Portfolio,
   head: () => ({
     meta: [
-      { title: "Pradip Pantha — CS Student & Project Coordinator" },
+      { title: "Pradip Pantha — CS Student " },
       {
         name: "description",
         content:
@@ -142,8 +142,30 @@ function Nav() {
   return (
     <nav className="sticky top-0 z-40 border-b border-border/50 bg-background/70 backdrop-blur-md">
       <div className="mx-auto flex max-w-3xl items-center justify-between px-5 py-3">
-        <a href="#top" className="font-display text-sm font-semibold tracking-tight">
-          PP<span className="text-primary">.</span>
+        <a href="#top" className="flex items-center gap-3 font-display text-sm font-semibold tracking-tight">
+          <span className="flex h-9 w-9 items-center justify-center rounded-full border border-primary/30 bg-primary/10 text-base font-bold text-primary shadow-sm">
+            <span className="sr-only">Pradip Pantha logo</span>
+            <svg viewBox="0 0 64 64" className="h-5 w-5" aria-hidden="true">
+              <rect x="4" y="4" width="56" height="56" rx="16" fill="currentColor" opacity="0.12" />
+              <path
+                d="M19 18h11c7.2 0 12 4.3 12 11.2 0 7.2-5.1 11.8-12.4 11.8H25v11H19V18Z"
+                fill="currentColor"
+              />
+              <path
+                d="M25 24v12h3.2c3.6 0 5.7-1.9 5.7-5.1 0-3.3-2.1-6.9-5.7-6.9H25Z"
+                fill="#38bdf8"
+              />
+              <circle cx="45" cy="22" r="6" fill="#f59e0b" />
+              <path
+                d="M45 18.5a3.5 3.5 0 1 1 0 7"
+                stroke="#fff"
+                strokeWidth="2"
+                strokeLinecap="round"
+                fill="none"
+              />
+            </svg>
+          </span>
+          <span className="text-foreground">Pradip Pantha</span>
         </a>
         <div className="flex gap-1 text-sm">
           {[
@@ -176,7 +198,30 @@ function Hero() {
           </span>
           Open to internships & collabs
         </div>
-        <h1 className="mt-5 text-5xl font-bold tracking-tight sm:text-6xl">Pradip Pantha</h1>
+        <div className="mt-5 flex items-center gap-3">
+          <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-primary/30 bg-primary/10 p-2 shadow-sm">
+            <svg viewBox="0 0 64 64" className="h-10 w-10 text-primary" aria-hidden="true">
+              <rect x="4" y="4" width="56" height="56" rx="16" fill="currentColor" opacity="0.12" />
+              <path
+                d="M19 18h11c7.2 0 12 4.3 12 11.2 0 7.2-5.1 11.8-12.4 11.8H25v11H19V18Z"
+                fill="currentColor"
+              />
+              <path
+                d="M25 24v12h3.2c3.6 0 5.7-1.9 5.7-5.1 0-3.3-2.1-6.9-5.7-6.9H25Z"
+                fill="#38bdf8"
+              />
+              <circle cx="45" cy="22" r="6" fill="#f59e0b" />
+              <path
+                d="M45 18.5a3.5 3.5 0 1 1 0 7"
+                stroke="#fff"
+                strokeWidth="2"
+                strokeLinecap="round"
+                fill="none"
+              />
+            </svg>
+          </div>
+          <h1 className="text-5xl font-bold tracking-tight sm:text-6xl">Pradip Pantha</h1>
+        </div>
         <p className="mt-3 text-xl font-medium text-gradient">
           Computer Science Student & Project Coordinator
         </p>
