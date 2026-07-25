@@ -27,7 +27,7 @@ const experiences = [
   {
     year: "2024",
     title: "Expense Tracking App — Group Project",
-    role: "Project Coordinator",
+    role: "Project Manager",
     points: [
       "Broke the project into tasks and tracked progress on a weekly basis using Trello.",
       "Ran short check-ins with teammates to unblock issues and keep the scope realistic for our deadline.",
@@ -121,7 +121,7 @@ function Portfolio() {
         </Section>
 
         <footer className="mt-16 border-t border-border/60 pt-6 text-center text-xs text-muted-foreground">
-          © {new Date().getFullYear()} Pradip Pantha · SINCE 2003
+          © {new Date().getFullYear()} Pradip Pantha · BORN in 2002
           <div className="mt-2">
             <a
               href={GITHUB}
