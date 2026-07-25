@@ -68,8 +68,8 @@ function Portfolio() {
             I'm a final-year Computer Science student at{" "}
             <span className="text-foreground font-medium">Herald College Kathmandu</span>. I enjoy the
             coordination side of software as much as the building side — organising work, keeping small
-            teams on track, and shipping projects that actually get finished. I'm still learning, and I
-            lean on modern tools (including AI assistants) the same way I lean on Stack Overflow or
+            teams on track, and shipping projects that actually get finished. I'm a quick learner and
+            I'm still learning, leaning on modern tools (including AI assistants) the same way I lean on Stack Overflow or
             documentation: to move faster and understand things better.
           </div>
         </Section>
@@ -193,10 +193,10 @@ function Hero() {
       <div className="animate-fade-up">
         <div className="inline-flex items-center gap-2 rounded-full border border-border bg-card/60 px-3 py-1 text-xs text-muted-foreground">
           <span className="relative flex h-2 w-2">
-            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-75" />
-            <span className="relative inline-flex h-2 w-2 rounded-full bg-primary" />
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-500 opacity-75" />
+            <span className="relative inline-flex h-2 w-2 rounded-full bg-green-500" />
           </span>
-          Open to internships & collabs
+          Available for recruitment
         </div>
         <div className="mt-5 flex items-center gap-3">
           <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-primary/30 bg-primary/10 p-2 shadow-sm">
