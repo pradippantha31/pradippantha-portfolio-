@@ -223,7 +223,7 @@ function Hero() {
           <h1 className="text-5xl font-bold tracking-tight sm:text-6xl">Pradip Pantha</h1>
         </div>
         <p className="mt-3 text-xl font-medium text-gradient">
-          Computer Science Student & Project Coordinator
+          Computer Science Student
         </p>
         <div className="mt-6 space-y-2 text-sm text-muted-foreground">
           <InfoRow icon="📍" text="Kathmandu, Nepal" />

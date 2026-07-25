@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Pradip Pantha logo">
+  <rect width="64" height="64" rx="18" fill="#0f172a"/>
+  <path d="M19 18h11c7.2 0 12 4.3 12 11.2 0 7.2-5.1 11.8-12.4 11.8H25v11H19V18Z" fill="#f8fafc"/>
+  <path d="M25 24v12h3.2c3.6 0 5.7-1.9 5.7-5.1 0-3.3-2.1-6.9-5.7-6.9H25Z" fill="#38bdf8"/>
+  <circle cx="45" cy="22" r="6" fill="#f59e0b"/>
+  <path d="M45 18.5a3.5 3.5 0 1 1 0 7" stroke="#fff" stroke-width="2" stroke-linecap="round" fill="none"/>
+</svg>
