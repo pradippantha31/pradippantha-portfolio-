@@ -69,7 +69,7 @@ function Portfolio() {
             <span className="text-foreground font-medium">Herald College Kathmandu</span>. I enjoy the
             coordination side of software as much as the building side — organising work, keeping small
             teams on track, and shipping projects that actually get finished. I'm a quick learner and
-            I'm still learning, leaning on modern tools (including AI assistants) the same way I lean on Stack Overflow or
+            adaptable in competitive scenarios and under pressure. I'm still learning, leaning on modern tools (including AI assistants) the same way I lean on Stack Overflow or
             documentation: to move faster and understand things better.
           </div>
         </Section>
