@@ -26,9 +26,8 @@ export function Footer() {
           <p className="font-display font-bold text-foreground text-base">
             Pradip Pantha <span className="text-sky-400">.</span> Portfolio
           </p>
-          <p className="mt-1 text-xs text-muted-foreground flex items-center gap-1">
-            © {new Date().getFullYear()} Pradip Pantha · Built with React 19, Framer Motion &
-            Tailwind CSS
+          <p className="mt-1 text-xs text-muted-foreground">
+            © {new Date().getFullYear()} Pradip Pantha · All rights reserved.
           </p>
         </motion.div>
 
