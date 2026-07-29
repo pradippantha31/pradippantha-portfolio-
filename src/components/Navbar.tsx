@@ -98,15 +98,7 @@ export function Navbar() {
         </nav>
 
         {/* CTA right side */}
-        <div className="hidden md:flex items-center gap-2">
-          <a
-            href="/cv.pdf"
-            target="_blank"
-            rel="noreferrer"
-            className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card/60 px-3.5 py-2 text-xs font-semibold text-muted-foreground hover:text-foreground hover:border-sky-400 transition-all shadow-sm"
-          >
-            <span>CV</span>
-          </a>
+        <div className="hidden md:block">
           <a
             href="#contact"
             onClick={(e) => handleNavClick(e, "#contact")}
