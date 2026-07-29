@@ -14,10 +14,10 @@ import {
 } from "lucide-react";
 
 const ROLES = [
+  "Expert in AI Prompting & LLM Tooling",
   "CS Student & Full-Stack Developer",
   "Project Coordinator & Manager",
-  "React & TypeScript Enthusiast",
-  "Problem Solver & Tech Explorer",
+  "React & TypeScript Specialist",
 ];
 
 const LINKEDIN_URL = "https://www.linkedin.com/in/panthapradip31";
@@ -77,7 +77,7 @@ export function Hero() {
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-teal-400 opacity-75" />
               <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-teal-400" />
             </span>
-            Available for Engineering & Coordination Roles
+            Available for Engineering & AI Workflow Roles
           </div>
 
           {/* Heading */}
@@ -101,6 +101,10 @@ export function Hero() {
 
           {/* Meta Info Pills */}
           <div className="mt-6 flex flex-wrap gap-4 text-xs font-medium text-muted-foreground">
+            <div className="flex items-center gap-1.5 bg-purple-500/15 border border-purple-500/30 px-3.5 py-1.5 rounded-lg text-purple-300 font-bold shadow-sm">
+              <Sparkles className="h-3.5 w-3.5 text-purple-400" />
+              Expert in AI Prompting
+            </div>
             <div className="flex items-center gap-1.5 bg-card/60 border border-border/60 px-3 py-1.5 rounded-lg">
               <MapPin className="h-3.5 w-3.5 text-sky-400" />
               Kathmandu, Nepal

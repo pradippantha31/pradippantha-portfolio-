@@ -42,14 +42,14 @@ const SKILL_CATEGORIES: SkillCategory[] = [
     ],
   },
   {
-    title: "AI Workflows & Productivity",
+    title: "AI Workflows & Prompt Engineering",
     icon: <Cpu className="h-5 w-5 text-purple-400" />,
     skills: [
-      { name: "AI Coding Assistant Orchestration", level: 95 },
-      { name: "Prompt Engineering & Verification", level: 90 },
-      { name: "Rapid Prototyping", level: 92 },
-      { name: "Problem Diagnostics & Debugging", level: 88 },
-      { name: "Clean Engineering Practices", level: 90 },
+      { name: "Expert AI Prompt Engineering", level: 98 },
+      { name: "LLM Orchestration & Prompt Tuning", level: 95 },
+      { name: "AI Coding Assistant Execution", level: 95 },
+      { name: "Rapid AI Prototyping & Architecture", level: 92 },
+      { name: "Clean Engineering & Code Verification", level: 90 },
     ],
   },
 ];
