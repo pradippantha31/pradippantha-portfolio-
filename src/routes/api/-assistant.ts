@@ -12,7 +12,10 @@ export const POST = async ({ request }: { request: Request }) => {
     const mode = String(body?.mode || "project");
 
     if (!prompt) {
-      return createJsonResponse({ answer: "Please provide a question or prompt to continue." }, 400);
+      return createJsonResponse(
+        { answer: "Please provide a question or prompt to continue." },
+        400,
+      );
     }
 
     const provider = process.env.VITE_OPENROUTER_API_KEY || process.env.OPENROUTER_API_KEY;
@@ -47,7 +50,10 @@ export const POST = async ({ request }: { request: Request }) => {
     });
 
     if (!response.ok) {
-      return createJsonResponse({ answer: "The assistant is currently unavailable. Please try again shortly." }, 502);
+      return createJsonResponse(
+        { answer: "The assistant is currently unavailable. Please try again shortly." },
+        502,
+      );
     }
 
     const data = await response.json();

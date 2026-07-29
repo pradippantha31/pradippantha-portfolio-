@@ -1,5 +1,15 @@
 import { useEffect, useState } from "react";
-import { Terminal, Cpu, Sparkles, Play, Copy, Check, Zap, ShieldCheck, CreditCard } from "lucide-react";
+import {
+  Terminal,
+  Cpu,
+  Sparkles,
+  Play,
+  Copy,
+  Check,
+  Zap,
+  ShieldCheck,
+  CreditCard,
+} from "lucide-react";
 import { getAssistantReply } from "../../../src/lib/assistantResponses";
 
 const PRESET_WORKFLOWS = [
@@ -72,9 +82,7 @@ export default function App() {
   const [activeOutput, setActiveOutput] = useState(PRESET_WORKFLOWS[0].output);
   const [copied, setCopied] = useState(false);
   const [isPremiumUnlocked, setIsPremiumUnlocked] = useState(false);
-  const [selectedGateway, setSelectedGateway] = useState<"PayPal" | "Chime" | "Binance" | "">(
-    "",
-  );
+  const [selectedGateway, setSelectedGateway] = useState<"PayPal" | "Chime" | "Binance" | "">("");
 
   const sanitizeInput = (str: string) => str.replace(/[<>]/g, "");
 
@@ -109,10 +117,7 @@ export default function App() {
   const handlePremiumUnlock = (gateway: "PayPal" | "Chime" | "Binance") => {
     setSelectedGateway(gateway);
     setIsPremiumUnlocked(true);
-    window.localStorage.setItem(
-      "ai-suite-premium",
-      JSON.stringify({ unlocked: true, gateway }),
-    );
+    window.localStorage.setItem("ai-suite-premium", JSON.stringify({ unlocked: true, gateway }));
   };
 
   const handleGatewaySelect = (gateway: "PayPal" | "Chime" | "Binance") => {
@@ -138,9 +143,7 @@ export default function App() {
     const targetModelObj = AI_MODELS.find((m) => m.id === selectedModel);
     const isGroq = targetModelObj?.provider === "groq";
 
-    const effectiveKey = isPremiumUnlocked
-      ? apiKey.trim() || getPreferredApiKey()
-      : "";
+    const effectiveKey = isPremiumUnlocked ? apiKey.trim() || getPreferredApiKey() : "";
 
     if (!isPremiumUnlocked || !effectiveKey) {
       setTimeout(() => {
@@ -249,7 +252,9 @@ ${fallbackReply}`);
         <div className="mb-8 rounded-2xl border border-emerald-500/20 bg-emerald-500/10 p-5 backdrop-blur-xl">
           <div className="flex items-center gap-2 text-emerald-300">
             <ShieldCheck className="h-4 w-4" />
-            <span className="text-sm font-semibold">Secure AI Upgrade & Premium Feature Requests</span>
+            <span className="text-sm font-semibold">
+              Secure AI Upgrade & Premium Feature Requests
+            </span>
           </div>
           <p className="mt-2 text-sm text-slate-300">
             Need extra AI capabilities, custom workflow support, or priority access for this demo?
@@ -257,11 +262,13 @@ ${fallbackReply}`);
           </p>
 
           <div className="mt-4 grid gap-3 md:grid-cols-3">
-            {([
-              ["PayPal", "Fast checkout for premium AI access"],
-              ["Chime", "Direct transfer arrangement for approved upgrades"],
-              ["Binance", "Crypto payment option for advanced support"],
-            ] as const).map(([name, description]) => (
+            {(
+              [
+                ["PayPal", "Fast checkout for premium AI access"],
+                ["Chime", "Direct transfer arrangement for approved upgrades"],
+                ["Binance", "Crypto payment option for advanced support"],
+              ] as const
+            ).map(([name, description]) => (
               <button
                 key={name}
                 type="button"

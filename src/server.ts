@@ -121,10 +121,13 @@ async function handleAssistant(request: Request): Promise<Response> {
     const model = String(body?.model || "");
 
     if (!prompt) {
-      return new Response(JSON.stringify({ answer: "Please provide a question or prompt to continue." }), {
-        status: 400,
-        headers: { "content-type": "application/json; charset=utf-8" },
-      });
+      return new Response(
+        JSON.stringify({ answer: "Please provide a question or prompt to continue." }),
+        {
+          status: 400,
+          headers: { "content-type": "application/json; charset=utf-8" },
+        },
+      );
     }
 
     const providerConfig = resolveAssistantProvider(provider, model);
@@ -174,10 +177,13 @@ async function handleAssistant(request: Request): Promise<Response> {
     });
   } catch (error) {
     console.error("Assistant route error", error);
-    return new Response(JSON.stringify({ answer: "The assistant encountered an error while generating a response." }), {
-      status: 500,
-      headers: { "content-type": "application/json; charset=utf-8" },
-    });
+    return new Response(
+      JSON.stringify({ answer: "The assistant encountered an error while generating a response." }),
+      {
+        status: 500,
+        headers: { "content-type": "application/json; charset=utf-8" },
+      },
+    );
   }
 }
 

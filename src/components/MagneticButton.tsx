@@ -46,7 +46,9 @@ export function MagneticButton({
     setPosition({ x: 0, y: 0 });
   };
 
-  const handleClick = (e: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement | HTMLDivElement>) => {
+  const handleClick = (
+    e: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement | HTMLDivElement>,
+  ) => {
     if (disabled) return;
     if (ref.current) {
       const rect = ref.current.getBoundingClientRect();
@@ -97,11 +99,7 @@ export function MagneticButton({
 
   if (asDiv) {
     return (
-      <div
-        aria-label={ariaLabel}
-        onClick={handleClick}
-        className={`inline-block ${className}`}
-      >
+      <div aria-label={ariaLabel} onClick={handleClick} className={`inline-block ${className}`}>
         {content}
       </div>
     );

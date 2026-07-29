@@ -59,12 +59,12 @@ export default function App() {
   const [amount, setAmount] = useState("");
   const [category, setCategory] = useState("Infrastructure");
   const [apiKey, setApiKey] = useState(getPreferredApiKey());
-  const [aiInsight, setAiInsight] = useState("Premium AI forecasting is ready once you unlock access.");
+  const [aiInsight, setAiInsight] = useState(
+    "Premium AI forecasting is ready once you unlock access.",
+  );
   const [isGeneratingInsight, setIsGeneratingInsight] = useState(false);
   const [isPremiumUnlocked, setIsPremiumUnlocked] = useState(false);
-  const [selectedGateway, setSelectedGateway] = useState<"PayPal" | "Chime" | "Binance" | "">(
-    "",
-  );
+  const [selectedGateway, setSelectedGateway] = useState<"PayPal" | "Chime" | "Binance" | "">("");
 
   const filteredExpenses =
     selectedCategory === "All" ? expenses : expenses.filter((e) => e.category === selectedCategory);
@@ -106,7 +106,9 @@ export default function App() {
   const handlePremiumUnlock = (gateway: "PayPal" | "Chime" | "Binance") => {
     setSelectedGateway(gateway);
     setIsPremiumUnlocked(true);
-    setAiInsight(`Premium unlocked via ${gateway}. AI forecasting and smart budgeting insights are now active.`);
+    setAiInsight(
+      `Premium unlocked via ${gateway}. AI forecasting and smart budgeting insights are now active.`,
+    );
     window.localStorage.setItem(
       "expense-suite-premium",
       JSON.stringify({ unlocked: true, gateway }),
@@ -147,7 +149,10 @@ export default function App() {
               role: "system",
               content: "You are a finance analyst. Return a short forecast with 3 bullet points.",
             },
-            { role: "user", content: `Analyze this budget: monthly budget $${monthlyBudget}, total spent $${totalSpent}. Suggest practical actions.` },
+            {
+              role: "user",
+              content: `Analyze this budget: monthly budget $${monthlyBudget}, total spent $${totalSpent}. Suggest practical actions.`,
+            },
           ],
         }),
       });
@@ -165,7 +170,9 @@ export default function App() {
       // fall back below
     }
 
-    setAiInsight("Live AI forecast unavailable right now. Premium fallback mode is active with secure recommendations.");
+    setAiInsight(
+      "Live AI forecast unavailable right now. Premium fallback mode is active with secure recommendations.",
+    );
     setIsGeneratingInsight(false);
   };
 
@@ -236,16 +243,18 @@ export default function App() {
             <span className="text-sm font-semibold">Secure Upgrade & Premium Feature Requests</span>
           </div>
           <p className="mt-2 text-sm text-slate-300">
-            Interested in advanced analytics, custom reporting, or premium workflow support? Select a
-            secure payment option and I will confirm the next steps privately.
+            Interested in advanced analytics, custom reporting, or premium workflow support? Select
+            a secure payment option and I will confirm the next steps privately.
           </p>
 
           <div className="mt-4 grid gap-3 md:grid-cols-3">
-            {([
-              ["PayPal", "Fast checkout for premium dashboards"],
-              ["Chime", "Direct transfer arrangement for approved upgrades"],
-              ["Binance", "Crypto payment option for custom analytics"],
-            ] as const).map(([name, description]) => (
+            {(
+              [
+                ["PayPal", "Fast checkout for premium dashboards"],
+                ["Chime", "Direct transfer arrangement for approved upgrades"],
+                ["Binance", "Crypto payment option for custom analytics"],
+              ] as const
+            ).map(([name, description]) => (
               <button
                 key={name}
                 type="button"
@@ -289,8 +298,8 @@ export default function App() {
               <span className="text-sm font-semibold">Premium AI Budget Insights</span>
             </div>
             <p className="mt-2 text-sm text-slate-400">
-              Unlock this panel with a secure gateway and add a Groq, OpenRouter, or Gemini API key to
-automatically generate spend forecasts.
+              Unlock this panel with a secure gateway and add a Groq, OpenRouter, or Gemini API key
+              to automatically generate spend forecasts.
             </p>
             <input
               type="password"

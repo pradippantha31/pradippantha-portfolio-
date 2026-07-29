@@ -178,11 +178,7 @@ export function ContactSection() {
 
               {/* Submit Buttons */}
               <div className="flex flex-col sm:flex-row gap-4 pt-2">
-                <MagneticButton
-                  className="flex-1"
-                  type="submit"
-                  disabled={status === "loading"}
-                >
+                <MagneticButton className="flex-1" type="submit" disabled={status === "loading"}>
                   <div className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-sky-500 to-indigo-600 px-6 py-3.5 text-sm font-semibold text-white shadow-lg shadow-sky-500/25 transition-transform hover:scale-[1.01] active:scale-[0.99] disabled:opacity-50">
                     {status === "loading" ? (
                       <>

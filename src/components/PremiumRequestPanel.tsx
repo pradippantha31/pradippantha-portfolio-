@@ -28,7 +28,9 @@ const buildMailto = (gateway: Gateway, projectName: string, email: string) => {
 export function PremiumRequestPanel({ projectName, description }: PremiumRequestPanelProps) {
   const [selectedGateway, setSelectedGateway] = useState<Gateway | "">("");
   const [email, setEmail] = useState("");
-  const [status, setStatus] = useState<null | { type: "success" | "error" | "info"; text: string }>(null);
+  const [status, setStatus] = useState<null | { type: "success" | "error" | "info"; text: string }>(
+    null,
+  );
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handlePremiumRequest = async (gateway: Gateway) => {
@@ -52,7 +54,10 @@ export function PremiumRequestPanel({ projectName, description }: PremiumRequest
       }
 
       const data = await response.json();
-      setStatus({ type: "success", text: data.message || "Premium request submitted successfully." });
+      setStatus({
+        type: "success",
+        text: data.message || "Premium request submitted successfully.",
+      });
     } catch (error) {
       setStatus({
         type: "error",
@@ -119,8 +124,8 @@ export function PremiumRequestPanel({ projectName, description }: PremiumRequest
             status.type === "success"
               ? "border-emerald-500/20 bg-emerald-500/10 text-emerald-200"
               : status.type === "error"
-              ? "border-rose-500/20 bg-rose-500/10 text-rose-200"
-              : "border-slate-700 bg-slate-950/70 text-slate-200"
+                ? "border-rose-500/20 bg-rose-500/10 text-rose-200"
+                : "border-slate-700 bg-slate-950/70 text-slate-200"
           }`}
         >
           {status.text}

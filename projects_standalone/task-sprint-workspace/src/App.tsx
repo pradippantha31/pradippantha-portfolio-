@@ -70,9 +70,7 @@ export default function App() {
   const [aiPlan, setAiPlan] = useState("Premium AI sprint planning is ready after unlock.");
   const [isGeneratingPlan, setIsGeneratingPlan] = useState(false);
   const [isPremiumUnlocked, setIsPremiumUnlocked] = useState(false);
-  const [selectedGateway, setSelectedGateway] = useState<"PayPal" | "Chime" | "Binance" | "">(
-    "",
-  );
+  const [selectedGateway, setSelectedGateway] = useState<"PayPal" | "Chime" | "Binance" | "">("");
 
   const completedCount = tasks.filter((t) => t.status === "done").length;
   const progressPercentage = Math.round((completedCount / tasks.length) * 100);
@@ -110,11 +108,10 @@ export default function App() {
   const handlePremiumUnlock = (gateway: "PayPal" | "Chime" | "Binance") => {
     setSelectedGateway(gateway);
     setIsPremiumUnlocked(true);
-    setAiPlan(`Premium unlocked via ${gateway}. AI sprint planning and automation templates are now live.`);
-    window.localStorage.setItem(
-      "task-suite-premium",
-      JSON.stringify({ unlocked: true, gateway }),
+    setAiPlan(
+      `Premium unlocked via ${gateway}. AI sprint planning and automation templates are now live.`,
     );
+    window.localStorage.setItem("task-suite-premium", JSON.stringify({ unlocked: true, gateway }));
   };
 
   const handleGatewaySelect = (gateway: "PayPal" | "Chime" | "Binance") => {
@@ -252,16 +249,18 @@ export default function App() {
             <span className="text-sm font-semibold">Secure Upgrade & Premium Feature Requests</span>
           </div>
           <p className="mt-2 text-sm text-slate-300">
-            Need premium workflow support, team automation, or custom sprint upgrades? Choose a secure
-            payment method below and I will confirm the next steps privately.
+            Need premium workflow support, team automation, or custom sprint upgrades? Choose a
+            secure payment method below and I will confirm the next steps privately.
           </p>
 
           <div className="mt-4 grid gap-3 md:grid-cols-3">
-            {([
-              ["PayPal", "Fast checkout for premium workspace access"],
-              ["Chime", "Direct transfer arrangement for approved upgrades"],
-              ["Binance", "Crypto payment option for advanced automation"],
-            ] as const).map(([name, description]) => (
+            {(
+              [
+                ["PayPal", "Fast checkout for premium workspace access"],
+                ["Chime", "Direct transfer arrangement for approved upgrades"],
+                ["Binance", "Crypto payment option for advanced automation"],
+              ] as const
+            ).map(([name, description]) => (
               <button
                 key={name}
                 type="button"
@@ -305,7 +304,8 @@ export default function App() {
               <span className="text-sm font-semibold">Premium AI Sprint Planner</span>
             </div>
             <p className="mt-2 text-sm text-slate-400">
-              Unlock this panel and connect a Groq, OpenRouter, or Gemini API key for AI-assisted sprint planning.
+              Unlock this panel and connect a Groq, OpenRouter, or Gemini API key for AI-assisted
+              sprint planning.
             </p>
             <input
               type="password"
