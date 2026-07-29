@@ -124,14 +124,24 @@ function ExpenseTrackerApp() {
             </p>
           </div>
 
-          <div className="flex items-center gap-3">
-            <span className="text-xs text-slate-400">Monthly Target:</span>
-            <input
-              type="number"
-              value={monthlyBudget}
-              onChange={(e) => setMonthlyBudget(Number(e.target.value) || 0)}
-              className="w-24 rounded-lg border border-slate-800 bg-slate-900 px-3 py-1.5 text-sm font-semibold text-sky-400 focus:border-sky-400 focus:outline-none"
-            />
+          <div className="flex flex-wrap items-center gap-3">
+            <button
+              onClick={() =>
+                alert("SaaS Checkout: Upgrading to Pro Plan ($19/mo) with Stripe Integration...")
+              }
+              className="inline-flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 px-4 py-2 text-xs font-bold text-slate-950 shadow-lg hover:opacity-90 transition-opacity"
+            >
+              <span>⚡ Upgrade to Pro SaaS ($19/mo)</span>
+            </button>
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-slate-400">Target Budget:</span>
+              <input
+                type="number"
+                value={monthlyBudget}
+                onChange={(e) => setMonthlyBudget(Number(e.target.value) || 0)}
+                className="w-24 rounded-lg border border-slate-800 bg-slate-900 px-3 py-1.5 text-sm font-semibold text-sky-400 focus:border-sky-400 focus:outline-none"
+              />
+            </div>
           </div>
         </header>
 

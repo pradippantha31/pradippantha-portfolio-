@@ -146,17 +146,26 @@ function TaskWorkspaceApp() {
             </p>
           </div>
 
-          {/* Velocity Progress Bar */}
-          <div className="w-full sm:w-64 rounded-xl border border-slate-800 bg-slate-900/80 p-3.5 backdrop-blur-xl">
-            <div className="flex justify-between items-center text-xs font-semibold mb-1.5">
-              <span className="text-slate-400">Sprint Velocity</span>
-              <span className="text-teal-400">{progressPercentage}% Done</span>
-            </div>
-            <div className="h-2 w-full rounded-full bg-slate-800 overflow-hidden">
-              <div
-                style={{ width: `${progressPercentage}%` }}
-                className="h-full rounded-full bg-gradient-to-r from-sky-400 via-teal-300 to-emerald-400 transition-all duration-500"
-              />
+          <div className="flex flex-col items-start sm:items-end gap-2">
+            <button
+              onClick={() =>
+                alert("Productivity SaaS Billing: Team Seats ($9/seat/mo) - Active Workspace Plan")
+              }
+              className="inline-flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-emerald-400 to-teal-500 px-3.5 py-1.5 text-xs font-bold text-slate-950 shadow-md hover:opacity-90 transition-opacity"
+            >
+              <span>🚀 Team Seats ($9/seat/mo)</span>
+            </button>
+            <div className="w-full sm:w-64 rounded-xl border border-slate-800 bg-slate-900/80 p-3.5 backdrop-blur-xl">
+              <div className="flex justify-between items-center text-xs font-semibold mb-1.5">
+                <span className="text-slate-400">Sprint Velocity</span>
+                <span className="text-teal-400">{progressPercentage}% Done</span>
+              </div>
+              <div className="h-2 w-full rounded-full bg-slate-800 overflow-hidden">
+                <div
+                  style={{ width: `${progressPercentage}%` }}
+                  className="h-full rounded-full bg-gradient-to-r from-sky-400 via-teal-300 to-emerald-400 transition-all duration-500"
+                />
+              </div>
             </div>
           </div>
         </header>

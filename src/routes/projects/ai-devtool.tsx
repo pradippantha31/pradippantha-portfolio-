@@ -140,6 +140,19 @@ export function executeCustomWorkflow() {
               Automated Code Analysis · Refactoring & Prompt Engineering Tooling
             </p>
           </div>
+
+          <div className="flex flex-wrap items-center gap-3">
+            <button
+              onClick={() =>
+                alert(
+                  "AI IaaS Subscription: Pro Developer API ($29/mo) - 500,000 Monthly Tokens Activated!",
+                )
+              }
+              className="inline-flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-purple-500 to-indigo-600 px-4 py-2 text-xs font-bold text-white shadow-lg hover:opacity-90 transition-opacity"
+            >
+              <span>🔑 Pro AI API Tier ($29/mo)</span>
+            </button>
+          </div>
         </header>
 
         {/* Main Grid: Workflows Selector + Terminal Sandbox */}
