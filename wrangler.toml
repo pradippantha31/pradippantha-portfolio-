@@ -1,0 +1,15 @@
+#:schema node_modules/wrangler/config-schema.json
+name = "pradippantha-portfolio"
+compatibility_date = "2024-12-16"
+
+[build]
+command = "npm run build"
+cwd = "./"
+
+[build.upload]
+format = "modules"
+
+[site]
+bucket = "./dist/client"
+
+
