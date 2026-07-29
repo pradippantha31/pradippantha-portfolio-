@@ -16,19 +16,19 @@ npx wrangler deploy
 Write-Host "`n[2/4] Deploying Expense Tracking App..." -ForegroundColor Yellow
 cd "$Root/projects_standalone/expense-tracking-app"
 npm run build
-npx wrangler pages deploy dist --project-name=expense-tracking-app
+npx wrangler pages deploy dist --project-name=expense-tracking-app --commit-dirty=true
 
 # 3. Task Sprint Workspace Repo
 Write-Host "`n[3/4] Deploying Task & Sprint Workspace..." -ForegroundColor Yellow
 cd "$Root/projects_standalone/task-sprint-workspace"
 npm run build
-npx wrangler pages deploy dist --project-name=task-sprint-workspace
+npx wrangler pages deploy dist --project-name=task-sprint-workspace --commit-dirty=true
 
 # 4. AI Developer Suite Repo
 Write-Host "`n[4/4] Deploying AI Developer Suite..." -ForegroundColor Yellow
 cd "$Root/projects_standalone/ai-developer-suite"
 npm run build
-npx wrangler pages deploy dist --project-name=ai-developer-suite
+npx wrangler pages deploy dist --project-name=ai-developer-suite --commit-dirty=true
 
 cd "$Root"
 Write-Host "`n=========================================" -ForegroundColor Green

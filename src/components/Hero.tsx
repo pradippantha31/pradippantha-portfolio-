@@ -120,6 +120,13 @@ export function Hero() {
               </div>
             </MagneticButton>
 
+            <MagneticButton href="/cv.pdf" target="_blank" rel="noreferrer">
+              <div className="inline-flex items-center gap-2 rounded-xl border border-sky-500/30 bg-sky-500/10 px-6 py-3.5 text-sm font-semibold text-sky-300 backdrop-blur-md transition-colors hover:bg-sky-500/20 hover:border-sky-400">
+                <Download className="h-4 w-4 text-sky-400" />
+                <span>Download CV (PDF)</span>
+              </div>
+            </MagneticButton>
+
             <MagneticButton href="#contact">
               <div className="inline-flex items-center gap-2 rounded-xl border border-border bg-card/80 px-6 py-3.5 text-sm font-semibold text-foreground backdrop-blur-md transition-colors hover:bg-muted hover:border-sky-500/50">
                 <Mail className="h-4 w-4 text-sky-400" />
