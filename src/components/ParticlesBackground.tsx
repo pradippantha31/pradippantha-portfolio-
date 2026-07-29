@@ -13,32 +13,43 @@ export function ParticlesBackground() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   useEffect(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const reduceMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const coarsePointerQuery = window.matchMedia("(pointer: coarse)");
+    const isLowPower =
+      reduceMotionQuery.matches ||
+      coarsePointerQuery.matches ||
+      (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4);
+
+    if (isLowPower) return;
 
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
+    const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+
     let animationFrameId: number;
-    let width = (canvas.width = window.innerWidth);
-    let height = (canvas.height = window.innerHeight);
+    let width = (canvas.width = window.innerWidth * dpr);
+    let height = (canvas.height = window.innerHeight * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
     const handleResize = () => {
       if (!canvas) return;
-      width = canvas.width = window.innerWidth;
-      height = canvas.height = window.innerHeight;
+      width = canvas.width = window.innerWidth * dpr;
+      height = canvas.height = window.innerHeight * dpr;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     };
     window.addEventListener("resize", handleResize);
 
-    const particleCount = Math.min(Math.floor(window.innerWidth / 25), 45);
+    const particleCount = Math.min(Math.floor(window.innerWidth / 45), 24);
     const particles: Particle[] = Array.from({ length: particleCount }, () => ({
-      x: Math.random() * width,
-      y: Math.random() * height,
-      size: Math.random() * 2 + 1,
-      vx: (Math.random() - 0.5) * 0.3,
-      vy: (Math.random() - 0.5) * 0.3,
-      alpha: Math.random() * 0.4 + 0.1,
+      x: Math.random() * window.innerWidth,
+      y: Math.random() * window.innerHeight,
+      size: Math.random() * 1.7 + 0.8,
+      vx: (Math.random() - 0.5) * 0.2,
+      vy: (Math.random() - 0.5) * 0.2,
+      alpha: Math.random() * 0.35 + 0.08,
     }));
 
     let mouseX = -1000;
@@ -62,21 +73,18 @@ export function ParticlesBackground() {
         if (p.y < 0) p.y = height;
         if (p.y > height) p.y = 0;
 
-        // Subtle mouse push effect
         const dx = mouseX - p.x;
         const dy = mouseY - p.y;
         const dist = Math.sqrt(dx * dx + dy * dy);
         if (dist < 120) {
           const angle = Math.atan2(dy, dx);
-          p.x -= Math.cos(angle) * 0.6;
-          p.y -= Math.sin(angle) * 0.6;
+          p.x -= Math.cos(angle) * 0.4;
+          p.y -= Math.sin(angle) * 0.4;
         }
 
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
         ctx.fillStyle = `rgba(56, 189, 248, ${p.alpha})`;
-        ctx.shadowBlur = 8;
-        ctx.shadowColor = "rgba(56, 189, 248, 0.5)";
         ctx.fill();
       });
 

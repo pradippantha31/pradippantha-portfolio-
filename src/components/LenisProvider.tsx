@@ -3,18 +3,22 @@ import Lenis from "lenis";
 
 export function LenisProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
-    // Respect reduced motion settings
-    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-    if (mediaQuery.matches) return;
+    const reduceMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const coarsePointerQuery = window.matchMedia("(pointer: coarse)");
+    const isMobileViewport = window.innerWidth < 900;
+
+    if (reduceMotionQuery.matches || coarsePointerQuery.matches || isMobileViewport) {
+      return;
+    }
 
     const lenis = new Lenis({
-      duration: 1.2,
+      duration: 0.8,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       orientation: "vertical",
       gestureOrientation: "vertical",
       smoothWheel: true,
-      wheelMultiplier: 1.0,
-      touchMultiplier: 2.0,
+      wheelMultiplier: 0.9,
+      touchMultiplier: 1.0,
     });
 
     function raf(time: number) {

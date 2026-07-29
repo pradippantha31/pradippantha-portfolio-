@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   DollarSign,
@@ -10,6 +10,8 @@ import {
   Tag,
   ListTodo,
   ShieldCheck,
+  CreditCard,
+  Sparkles,
 } from "lucide-react";
 
 interface Expense {
@@ -42,6 +44,12 @@ const INITIAL_EXPENSES: Expense[] = [
 
 const CATEGORIES = ["All", "Infrastructure", "Design", "Domain", "Team", "Other"];
 
+const getPreferredApiKey = () =>
+  import.meta.env.VITE_GROQ_API_KEY ||
+  import.meta.env.VITE_OPENROUTER_API_KEY ||
+  import.meta.env.VITE_GEMINI_API_KEY ||
+  "";
+
 export default function App() {
   const [expenses, setExpenses] = useState<Expense[]>(INITIAL_EXPENSES);
   const [monthlyBudget, setMonthlyBudget] = useState<number>(500);
@@ -50,6 +58,13 @@ export default function App() {
   const [title, setTitle] = useState("");
   const [amount, setAmount] = useState("");
   const [category, setCategory] = useState("Infrastructure");
+  const [apiKey, setApiKey] = useState(getPreferredApiKey());
+  const [aiInsight, setAiInsight] = useState("Premium AI forecasting is ready once you unlock access.");
+  const [isGeneratingInsight, setIsGeneratingInsight] = useState(false);
+  const [isPremiumUnlocked, setIsPremiumUnlocked] = useState(false);
+  const [selectedGateway, setSelectedGateway] = useState<"PayPal" | "Chime" | "Binance" | "">(
+    "",
+  );
 
   const filteredExpenses =
     selectedCategory === "All" ? expenses : expenses.filter((e) => e.category === selectedCategory);
@@ -59,6 +74,100 @@ export default function App() {
   const percentageSpent = Math.min(100, Math.round((totalSpent / monthlyBudget) * 100));
 
   const sanitizeInput = (str: string) => str.replace(/[<>]/g, "");
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const stored = window.localStorage.getItem("expense-suite-premium");
+    if (!stored) return;
+
+    try {
+      const parsed = JSON.parse(stored) as {
+        unlocked?: boolean;
+        gateway?: "PayPal" | "Chime" | "Binance";
+      };
+      if (parsed.unlocked) {
+        setIsPremiumUnlocked(true);
+        setSelectedGateway(parsed.gateway || "");
+      }
+    } catch {
+      // ignore malformed data
+    }
+  }, []);
+
+  const handlePaymentRequest = (method: string) => {
+    const subject = encodeURIComponent(`AI Upgrade Payment Request - ${method}`);
+    const body = encodeURIComponent(
+      `Hi Pradip,\n\nI would like to purchase premium analytics support, forecasting upgrades, or custom budgeting features for this project demo.\n\nPreferred payment method: ${method}\n\nPlease share the secure payment instructions and confirmation steps.\n`,
+    );
+
+    window.location.href = `mailto:panthapradip31@gmail.com?subject=${subject}&body=${body}`;
+  };
+
+  const handlePremiumUnlock = (gateway: "PayPal" | "Chime" | "Binance") => {
+    setSelectedGateway(gateway);
+    setIsPremiumUnlocked(true);
+    setAiInsight(`Premium unlocked via ${gateway}. AI forecasting and smart budgeting insights are now active.`);
+    window.localStorage.setItem(
+      "expense-suite-premium",
+      JSON.stringify({ unlocked: true, gateway }),
+    );
+  };
+
+  const handleGatewaySelect = (gateway: "PayPal" | "Chime" | "Binance") => {
+    handlePremiumUnlock(gateway);
+    handlePaymentRequest(gateway);
+  };
+
+  const handleGenerateInsight = async () => {
+    if (!isPremiumUnlocked) {
+      setAiInsight("Unlock premium access first to generate AI budget insights.");
+      return;
+    }
+
+    const effectiveKey = apiKey.trim() || getPreferredApiKey();
+    if (!effectiveKey) {
+      setAiInsight("Add a Groq, OpenRouter, or Gemini API key to enable live AI forecasting.");
+      return;
+    }
+
+    setIsGeneratingInsight(true);
+    try {
+      const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${effectiveKey}`,
+          "HTTP-Referer": "https://pradippantha.dev",
+          "X-Title": "Pradip Expense Tracker",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          model: "llama-3.3-70b-versatile",
+          messages: [
+            {
+              role: "system",
+              content: "You are a finance analyst. Return a short forecast with 3 bullet points.",
+            },
+            { role: "user", content: `Analyze this budget: monthly budget $${monthlyBudget}, total spent $${totalSpent}. Suggest practical actions.` },
+          ],
+        }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        const content = data.choices?.[0]?.message?.content;
+        if (content) {
+          setAiInsight(content);
+          setIsGeneratingInsight(false);
+          return;
+        }
+      }
+    } catch {
+      // fall back below
+    }
+
+    setAiInsight("Live AI forecast unavailable right now. Premium fallback mode is active with secure recommendations.");
+    setIsGeneratingInsight(false);
+  };
 
   const handleAddExpense = (e: React.FormEvent) => {
     e.preventDefault();
@@ -120,6 +229,99 @@ export default function App() {
             </div>
           </div>
         </header>
+
+        <div className="mb-8 rounded-2xl border border-emerald-500/20 bg-emerald-500/10 p-5 backdrop-blur-xl">
+          <div className="flex items-center gap-2 text-emerald-300">
+            <ShieldCheck className="h-4 w-4" />
+            <span className="text-sm font-semibold">Secure Upgrade & Premium Feature Requests</span>
+          </div>
+          <p className="mt-2 text-sm text-slate-300">
+            Interested in advanced analytics, custom reporting, or premium workflow support? Select a
+            secure payment option and I will confirm the next steps privately.
+          </p>
+
+          <div className="mt-4 grid gap-3 md:grid-cols-3">
+            {([
+              ["PayPal", "Fast checkout for premium dashboards"],
+              ["Chime", "Direct transfer arrangement for approved upgrades"],
+              ["Binance", "Crypto payment option for custom analytics"],
+            ] as const).map(([name, description]) => (
+              <button
+                key={name}
+                type="button"
+                onClick={() => handleGatewaySelect(name)}
+                className={`rounded-xl border p-3 text-left transition-all ${
+                  selectedGateway === name
+                    ? "border-sky-400/60 bg-sky-500/10"
+                    : "border-slate-700 bg-slate-950/60 hover:border-sky-400/50"
+                }`}
+              >
+                <div className="flex items-center gap-2 text-white">
+                  <CreditCard className="h-4 w-4 text-sky-400" />
+                  <span className="text-sm font-semibold">{name}</span>
+                </div>
+                <p className="mt-1 text-xs text-slate-400">{description}</p>
+              </button>
+            ))}
+          </div>
+
+          {isPremiumUnlocked && (
+            <div className="mt-4 rounded-xl border border-sky-500/20 bg-slate-950/70 p-3 text-sm text-slate-300">
+              <p className="font-semibold text-sky-300">Unlocked features:</p>
+              <ul className="mt-2 list-disc space-y-1 pl-5 text-xs text-slate-400">
+                <li>AI budget forecasting and smart alerts</li>
+                <li>Premium recurring expense templates</li>
+                <li>Priority support and custom reporting</li>
+              </ul>
+            </div>
+          )}
+
+          <div className="mt-4 flex items-center gap-2 rounded-xl border border-sky-500/20 bg-sky-500/10 px-3 py-2 text-xs text-sky-300">
+            <Sparkles className="h-3.5 w-3.5" />
+            Secure payment requests are handled privately by email before any purchase is finalized.
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-[1.2fr_0.8fr] gap-6 mb-8">
+          <div className="rounded-2xl border border-slate-800 bg-slate-900/80 p-5 backdrop-blur-xl">
+            <div className="flex items-center gap-2 text-sky-300">
+              <Sparkles className="h-4 w-4" />
+              <span className="text-sm font-semibold">Premium AI Budget Insights</span>
+            </div>
+            <p className="mt-2 text-sm text-slate-400">
+              Unlock this panel with a secure gateway and add a Groq, OpenRouter, or Gemini API key to
+automatically generate spend forecasts.
+            </p>
+            <input
+              type="password"
+              value={apiKey}
+              onChange={(e) => setApiKey(e.target.value)}
+              placeholder="Groq / OpenRouter / Gemini API key"
+              className="mt-3 w-full rounded-xl border border-slate-800 bg-slate-950 px-3 py-2 text-sm text-slate-200 focus:border-sky-400 focus:outline-none"
+            />
+            <button
+              type="button"
+              onClick={handleGenerateInsight}
+              disabled={isGeneratingInsight}
+              className="mt-3 w-full rounded-xl bg-gradient-to-r from-sky-500 to-indigo-600 py-2.5 text-xs font-bold text-white shadow-lg hover:opacity-90 transition-opacity disabled:opacity-50"
+            >
+              {isGeneratingInsight ? "Generating Insight..." : "Generate AI Forecast"}
+            </button>
+            <p className="mt-3 whitespace-pre-wrap text-sm text-slate-300">{aiInsight}</p>
+          </div>
+
+          <div className="rounded-2xl border border-slate-800 bg-slate-900/80 p-5 backdrop-blur-xl">
+            <div className="flex items-center gap-2 text-emerald-300">
+              <ShieldCheck className="h-4 w-4" />
+              <span className="text-sm font-semibold">Premium Extras Included</span>
+            </div>
+            <ul className="mt-3 list-disc space-y-2 pl-5 text-sm text-slate-400">
+              <li>AI forecast summaries for your monthly budget</li>
+              <li>Recurring expense automation templates</li>
+              <li>Priority support and onboarding assistance</li>
+            </ul>
+          </div>
+        </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">
           <div className="rounded-2xl border border-slate-800 bg-slate-900/80 p-5 backdrop-blur-xl">

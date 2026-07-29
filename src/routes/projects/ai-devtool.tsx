@@ -13,6 +13,9 @@ import {
   FileCode,
   Zap,
 } from "lucide-react";
+import { ProjectAIAssistant } from "../../components/ProjectAIAssistant";
+import { PremiumRequestPanel } from "../../components/PremiumRequestPanel";
+import { getAssistantReply } from "../../lib/assistantResponses";
 
 export const Route = createFileRoute("/projects/ai-devtool")({
   component: AIDevToolApp,
@@ -82,15 +85,11 @@ const AI_MODELS = [
   { id: "anthropic/claude-3.5-sonnet", name: "Claude 3.5 Sonnet", provider: "openrouter" },
 ];
 
-const DEFAULT_GROQ_KEY =
-  import.meta.env.VITE_GROQ_API_KEY ||
-  ["gsk_dOqsmVsIdGCNummtsnEx", "WGdyb3FY9nrGCVTjVyMBQeUrvCaOe8PQ"].join("");
-
 function AIDevToolApp() {
   const [selectedWorkflow, setSelectedWorkflow] = useState(PRESET_WORKFLOWS[0]);
   const [selectedModel, setSelectedModel] = useState("llama-3.3-70b-versatile");
   const [customPrompt, setCustomPrompt] = useState("");
-  const [apiKey, setApiKey] = useState(DEFAULT_GROQ_KEY);
+  const [responseMode, setResponseMode] = useState("engineering");
   const [isProcessing, setIsProcessing] = useState(false);
   const [activeOutput, setActiveOutput] = useState(PRESET_WORKFLOWS[0].output);
   const [copied, setCopied] = useState(false);
@@ -112,69 +111,32 @@ function AIDevToolApp() {
     if (!cleanPrompt) return;
 
     setIsProcessing(true);
-    const targetModelObj = AI_MODELS.find((m) => m.id === selectedModel);
-    const isGroq = targetModelObj?.provider === "groq";
-
-    const effectiveKey =
-      apiKey.trim() || (isGroq ? DEFAULT_GROQ_KEY : import.meta.env.VITE_OPENROUTER_API_KEY || "");
-
-    const endpoint = isGroq
-      ? "https://api.groq.com/openai/v1/chat/completions"
-      : "https://openrouter.ai/api/v1/chat/completions";
-
     try {
-      const response = await fetch(endpoint, {
+      const response = await fetch("/api/assistant", {
         method: "POST",
-        headers: {
-          Authorization: `Bearer ${effectiveKey}`,
-          "HTTP-Referer": "https://pradippantha.dev",
-          "X-Title": "Pradip Pantha AI Developer Suite",
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          model: selectedModel,
-          messages: [
-            {
-              role: "system",
-              content:
-                "You are an expert AI software developer assistant. Generate clean, modular, and optimized code.",
-            },
-            {
-              role: "user",
-              content: cleanPrompt,
-            },
-          ],
+          prompt: cleanPrompt,
+          context:
+            "You are an advanced secure coding assistant for a developer workspace. Provide practical engineering guidance, secure patterns, and concise code examples.",
+          mode: responseMode,
         }),
       });
 
-      if (response.ok) {
-        const data = await response.json();
-        const content = data.choices?.[0]?.message?.content;
-        if (content) {
-          setActiveOutput(
-            `// Live ${isGroq ? "GroqCloud" : "OpenRouter"} AI Output [Model: ${selectedModel}]\n${content}`,
-          );
-          setIsProcessing(false);
-          setCustomPrompt("");
-          return;
-        }
-      }
-    } catch {
-      // Fallback response handling
-    }
-
-    // Fallback simulation
-    setTimeout(() => {
-      setActiveOutput(`// ${isGroq ? "GroqCloud" : "OpenRouter"} Ultra-Fast Inference Output [Model: ${selectedModel}]
-// Query: "${cleanPrompt}"
-export async function executeAiGeneratedPipeline() {
-  // Engine: ${isGroq ? "Groq LPU Accelerator" : "OpenRouter"} (${selectedModel})
-  // Processing verified with zero syntax errors.
-  return { status: "SUCCESS", latency: "${isGroq ? "4ms" : "18ms"}", engine: "${selectedModel}" };
-}`);
+      const data = await response.json();
+      const content = data.answer || "No response was generated.";
+      setActiveOutput(`// Secure LLM Response [Mode: ${responseMode}]\n${content}`);
       setIsProcessing(false);
       setCustomPrompt("");
-    }, 900);
+      return;
+    } catch {
+      const fallbackReply = getAssistantReply(cleanPrompt, "developer workspace", "developer");
+      setActiveOutput(`// Secure assistant fallback
+// Query: "${cleanPrompt}"
+${fallbackReply}`);
+      setIsProcessing(false);
+      setCustomPrompt("");
+    }
   };
 
   const handleCopyCode = () => {
@@ -219,7 +181,7 @@ export async function executeAiGeneratedPipeline() {
                   "AI IaaS Subscription: Pro Developer API ($29/mo) - 500,000 Monthly Tokens Activated!",
                 )
               }
-              className="inline-flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-purple-500 to-indigo-600 px-4 py-2 text-xs font-bold text-white shadow-lg hover:opacity-90 transition-opacity"
+              className="inline-flex items-center gap-1.5 rounded-xl bg-linear-to-r from-purple-500 to-indigo-600 px-4 py-2 text-xs font-bold text-white shadow-lg hover:opacity-90 transition-opacity"
             >
               <span>🔑 Pro AI API Tier ($29/mo)</span>
             </button>
@@ -254,6 +216,20 @@ export async function executeAiGeneratedPipeline() {
               </div>
             </div>
 
+            <ProjectAIAssistant
+              title="AI DevTool Companion"
+              context="Help a visitor understand the AI developer workspace, its workflows, and its security safeguards. Focus on advanced prompting, safe AI usage, and practical developer value."
+              placeholder="Ask how to use this workspace or improve its security..."
+              accent="from-purple-500 to-indigo-600"
+            />
+
+            <div className="mt-6">
+              <PremiumRequestPanel
+                projectName="AI Developer Workspace"
+                description="Request premium AI workflow upgrades, secure model access, or bespoke developer support for this project."
+              />
+            </div>
+
             {/* Custom Prompt Interactive Input */}
             <div className="rounded-2xl border border-slate-800 bg-slate-900/80 p-5 backdrop-blur-xl">
               <h2 className="text-base font-bold text-white mb-3 flex items-center justify-between">
@@ -286,15 +262,17 @@ export async function executeAiGeneratedPipeline() {
 
                 <div>
                   <label className="block text-[11px] font-semibold text-slate-400 mb-1">
-                    OpenRouter API Key (Active)
+                    Response Mode
                   </label>
-                  <input
-                    type="password"
-                    value={apiKey}
-                    onChange={(e) => setApiKey(e.target.value)}
-                    placeholder="sk-or-v1-..."
-                    className="w-full rounded-xl border border-slate-800 bg-slate-950 px-3 py-1.5 text-xs text-slate-300 font-mono focus:border-sky-400 focus:outline-none"
-                  />
+                  <select
+                    value={responseMode}
+                    onChange={(e) => setResponseMode(e.target.value)}
+                    className="w-full rounded-xl border border-slate-800 bg-slate-950 px-3 py-2 text-xs text-white focus:border-sky-400 focus:outline-none font-mono"
+                  >
+                    <option value="engineering">Engineering Guidance</option>
+                    <option value="security">Security Review</option>
+                    <option value="product">Product Strategy</option>
+                  </select>
                 </div>
 
                 <textarea
@@ -308,7 +286,7 @@ export async function executeAiGeneratedPipeline() {
                 <button
                   type="submit"
                   disabled={isProcessing}
-                  className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-sky-500 to-indigo-600 py-2.5 text-xs font-bold text-white shadow-lg hover:opacity-90 transition-opacity disabled:opacity-50"
+                  className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-linear-to-r from-sky-500 to-indigo-600 py-2.5 text-xs font-bold text-white shadow-lg hover:opacity-90 transition-opacity disabled:opacity-50"
                 >
                   <Play className="h-3.5 w-3.5 fill-current" />
                   <span>Execute OpenRouter AI Request</span>
@@ -340,7 +318,7 @@ export async function executeAiGeneratedPipeline() {
             </div>
 
             {/* Code Output Window */}
-            <div className="p-6 font-mono text-xs leading-relaxed text-sky-300 overflow-x-auto min-h-[350px] bg-slate-950/90 flex-1">
+            <div className="p-6 font-mono text-xs leading-relaxed text-sky-300 overflow-x-auto min-h-87.5 bg-slate-950/90 flex-1">
               {isProcessing ? (
                 <div className="flex items-center gap-3 text-slate-400 animate-pulse py-10">
                   <Cpu className="h-5 w-5 text-sky-400 animate-spin" />

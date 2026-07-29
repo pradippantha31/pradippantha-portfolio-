@@ -77,7 +77,7 @@ export function Hero() {
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-teal-400 opacity-75" />
               <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-teal-400" />
             </span>
-            Available for Engineering & AI Workflow Roles
+            Prompt-First Engineering & AI Workflow Support
           </div>
 
           {/* Heading */}
@@ -93,12 +93,12 @@ export function Hero() {
 
           {/* Bio text */}
           <p className="mt-5 text-base sm:text-lg text-muted-foreground leading-relaxed max-w-2xl">
-            A Computer Science Scholar at{" "}
+            A Computer Science scholar at{" "}
             <span className="text-foreground font-semibold">Herald College Kathmandu</span>{" "}
-            specializing in modern full-stack engineering, AI prompt optimization, and agile project
-            coordination. Dedicated to architecting high-performance web applications, streamlining
-            team workflows, and translating complex challenges into intuitive, scalable software
-            solutions.
+            specializing in modern full-stack engineering, AI prompt design, and agile project
+            coordination. I build high-performance web applications, streamline workflows, and turn
+            complex ideas into intuitive, scalable solutions through thoughtful implementation and
+            clear technical execution.
           </p>
 
           {/* Meta Info Pills */}

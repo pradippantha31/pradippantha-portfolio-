@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Kanban, Plus, MoveRight } from "lucide-react";
+import { Kanban, Plus, MoveRight, ShieldCheck, CreditCard, Sparkles } from "lucide-react";
 
 interface TaskItem {
   id: string;
@@ -44,7 +44,7 @@ const INITIAL_TASKS: TaskItem[] = [
     title: "Final Deployment & GitHub Repository Verification",
     assignee: "Pradip Pantha",
     priority: "High",
-    status: "todo",
+    status: "done",
   },
 ];
 
@@ -55,16 +55,126 @@ const COLUMNS = [
   { id: "done", label: "Completed", color: "border-teal-500/40 bg-teal-950/20" },
 ];
 
+const getPreferredApiKey = () =>
+  import.meta.env.VITE_GROQ_API_KEY ||
+  import.meta.env.VITE_OPENROUTER_API_KEY ||
+  import.meta.env.VITE_GEMINI_API_KEY ||
+  "";
+
 export default function App() {
   const [tasks, setTasks] = useState<TaskItem[]>(INITIAL_TASKS);
   const [taskTitle, setTaskTitle] = useState("");
   const [assignee, setAssignee] = useState("Pradip Pantha");
   const [priority, setPriority] = useState<"Low" | "Medium" | "High">("High");
+  const [apiKey, setApiKey] = useState(getPreferredApiKey());
+  const [aiPlan, setAiPlan] = useState("Premium AI sprint planning is ready after unlock.");
+  const [isGeneratingPlan, setIsGeneratingPlan] = useState(false);
+  const [isPremiumUnlocked, setIsPremiumUnlocked] = useState(false);
+  const [selectedGateway, setSelectedGateway] = useState<"PayPal" | "Chime" | "Binance" | "">(
+    "",
+  );
 
   const completedCount = tasks.filter((t) => t.status === "done").length;
   const progressPercentage = Math.round((completedCount / tasks.length) * 100);
 
   const sanitizeInput = (str: string) => str.replace(/[<>]/g, "");
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const stored = window.localStorage.getItem("task-suite-premium");
+    if (!stored) return;
+
+    try {
+      const parsed = JSON.parse(stored) as {
+        unlocked?: boolean;
+        gateway?: "PayPal" | "Chime" | "Binance";
+      };
+      if (parsed.unlocked) {
+        setIsPremiumUnlocked(true);
+        setSelectedGateway(parsed.gateway || "");
+      }
+    } catch {
+      // ignore malformed data
+    }
+  }, []);
+
+  const handlePaymentRequest = (method: string) => {
+    const subject = encodeURIComponent(`AI Upgrade Payment Request - ${method}`);
+    const body = encodeURIComponent(
+      `Hi Pradip,\n\nI would like to purchase premium productivity support, AI sprint automation, or custom workspace upgrades for this project demo.\n\nPreferred payment method: ${method}\n\nPlease share the secure payment instructions and confirmation steps.\n`,
+    );
+
+    window.location.href = `mailto:panthapradip31@gmail.com?subject=${subject}&body=${body}`;
+  };
+
+  const handlePremiumUnlock = (gateway: "PayPal" | "Chime" | "Binance") => {
+    setSelectedGateway(gateway);
+    setIsPremiumUnlocked(true);
+    setAiPlan(`Premium unlocked via ${gateway}. AI sprint planning and automation templates are now live.`);
+    window.localStorage.setItem(
+      "task-suite-premium",
+      JSON.stringify({ unlocked: true, gateway }),
+    );
+  };
+
+  const handleGatewaySelect = (gateway: "PayPal" | "Chime" | "Binance") => {
+    handlePremiumUnlock(gateway);
+    handlePaymentRequest(gateway);
+  };
+
+  const handleGenerateSprintPlan = async () => {
+    if (!isPremiumUnlocked) {
+      setAiPlan("Unlock premium access first to generate an AI sprint plan.");
+      return;
+    }
+
+    const effectiveKey = apiKey.trim() || getPreferredApiKey();
+    if (!effectiveKey) {
+      setAiPlan("Add a Groq, OpenRouter, or Gemini API key to enable live sprint planning.");
+      return;
+    }
+
+    setIsGeneratingPlan(true);
+    try {
+      const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${effectiveKey}`,
+          "HTTP-Referer": "https://pradippantha.dev",
+          "X-Title": "Pradip Sprint Workspace",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          model: "llama-3.3-70b-versatile",
+          messages: [
+            {
+              role: "system",
+              content: "You are an agile project manager. Return a concise actionable sprint plan.",
+            },
+            {
+              role: "user",
+              content: `Create a sprint plan for ${tasks.length} tasks with ${completedCount} completed and ${progressPercentage}% progress.`,
+            },
+          ],
+        }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        const content = data.choices?.[0]?.message?.content;
+        if (content) {
+          setAiPlan(content);
+          setIsGeneratingPlan(false);
+          return;
+        }
+      }
+    } catch {
+      // fall back below
+    }
+
+    setAiPlan("Live sprint-planning model unavailable right now. Premium fallback mode is active.");
+    setIsGeneratingPlan(false);
+  };
 
   const handleAddTask = (e: React.FormEvent) => {
     e.preventDefault();
@@ -135,6 +245,98 @@ export default function App() {
             </div>
           </div>
         </header>
+
+        <div className="mb-8 rounded-2xl border border-emerald-500/20 bg-emerald-500/10 p-5 backdrop-blur-xl">
+          <div className="flex items-center gap-2 text-emerald-300">
+            <ShieldCheck className="h-4 w-4" />
+            <span className="text-sm font-semibold">Secure Upgrade & Premium Feature Requests</span>
+          </div>
+          <p className="mt-2 text-sm text-slate-300">
+            Need premium workflow support, team automation, or custom sprint upgrades? Choose a secure
+            payment method below and I will confirm the next steps privately.
+          </p>
+
+          <div className="mt-4 grid gap-3 md:grid-cols-3">
+            {([
+              ["PayPal", "Fast checkout for premium workspace access"],
+              ["Chime", "Direct transfer arrangement for approved upgrades"],
+              ["Binance", "Crypto payment option for advanced automation"],
+            ] as const).map(([name, description]) => (
+              <button
+                key={name}
+                type="button"
+                onClick={() => handleGatewaySelect(name)}
+                className={`rounded-xl border p-3 text-left transition-all ${
+                  selectedGateway === name
+                    ? "border-sky-400/60 bg-sky-500/10"
+                    : "border-slate-700 bg-slate-950/60 hover:border-sky-400/50"
+                }`}
+              >
+                <div className="flex items-center gap-2 text-white">
+                  <CreditCard className="h-4 w-4 text-sky-400" />
+                  <span className="text-sm font-semibold">{name}</span>
+                </div>
+                <p className="mt-1 text-xs text-slate-400">{description}</p>
+              </button>
+            ))}
+          </div>
+
+          {isPremiumUnlocked && (
+            <div className="mt-4 rounded-xl border border-sky-500/20 bg-slate-950/70 p-3 text-sm text-slate-300">
+              <p className="font-semibold text-sky-300">Unlocked features:</p>
+              <ul className="mt-2 list-disc space-y-1 pl-5 text-xs text-slate-400">
+                <li>AI sprint planning and task prioritization</li>
+                <li>Automation playbooks for repeated work</li>
+                <li>Priority support for team workflows</li>
+              </ul>
+            </div>
+          )}
+
+          <div className="mt-4 flex items-center gap-2 rounded-xl border border-sky-500/20 bg-sky-500/10 px-3 py-2 text-xs text-sky-300">
+            <Sparkles className="h-3.5 w-3.5" />
+            Secure payment requests are handled privately by email before any purchase is finalized.
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-6 mb-8">
+          <div className="rounded-2xl border border-slate-800 bg-slate-900/80 p-5 backdrop-blur-xl">
+            <div className="flex items-center gap-2 text-purple-300">
+              <Sparkles className="h-4 w-4" />
+              <span className="text-sm font-semibold">Premium AI Sprint Planner</span>
+            </div>
+            <p className="mt-2 text-sm text-slate-400">
+              Unlock this panel and connect a Groq, OpenRouter, or Gemini API key for AI-assisted sprint planning.
+            </p>
+            <input
+              type="password"
+              value={apiKey}
+              onChange={(e) => setApiKey(e.target.value)}
+              placeholder="Groq / OpenRouter / Gemini API key"
+              className="mt-3 w-full rounded-xl border border-slate-800 bg-slate-950 px-3 py-2 text-sm text-slate-200 focus:border-purple-400 focus:outline-none"
+            />
+            <button
+              type="button"
+              onClick={handleGenerateSprintPlan}
+              disabled={isGeneratingPlan}
+              className="mt-3 w-full rounded-xl bg-gradient-to-r from-purple-600 to-sky-500 px-6 py-2.5 text-xs font-bold text-white shadow-lg hover:opacity-90 transition-opacity disabled:opacity-50"
+            >
+              {isGeneratingPlan ? "Generating Plan..." : "Generate AI Sprint Plan"}
+            </button>
+            <p className="mt-3 whitespace-pre-wrap text-sm text-slate-300">{aiPlan}</p>
+          </div>
+
+          <div className="rounded-2xl border border-slate-800 bg-slate-900/80 p-5 backdrop-blur-xl">
+            <div className="flex items-center gap-2 text-emerald-300">
+              <ShieldCheck className="h-4 w-4" />
+              <span className="text-sm font-semibold">Premium Extras Included</span>
+            </div>
+            <ul className="mt-3 list-disc space-y-2 pl-5 text-sm text-slate-400">
+              <li>AI generated sprint objectives and risks</li>
+              <li>Automation playbooks for recurring review rituals</li>
+              <li>Priority support and setup guidance</li>
+            </ul>
+          </div>
+        </div>
 
         <div className="rounded-2xl border border-slate-800 bg-slate-900/80 p-5 mb-8 backdrop-blur-xl">
           <form onSubmit={handleAddTask} className="flex flex-col md:flex-row gap-4 items-end">

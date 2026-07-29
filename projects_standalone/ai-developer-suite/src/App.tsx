@@ -1,5 +1,6 @@
-import { useState } from "react";
-import { Terminal, Cpu, Sparkles, Play, Copy, Check, Zap } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Terminal, Cpu, Sparkles, Play, Copy, Check, Zap, ShieldCheck, CreditCard } from "lucide-react";
+import { getAssistantReply } from "../../../src/lib/assistantResponses";
 
 const PRESET_WORKFLOWS = [
   {
@@ -56,20 +57,68 @@ const AI_MODELS = [
   { id: "anthropic/claude-3.5-sonnet", name: "Claude 3.5 Sonnet", provider: "openrouter" },
 ];
 
-const DEFAULT_GROQ_KEY =
+const getPreferredApiKey = () =>
   import.meta.env.VITE_GROQ_API_KEY ||
-  ["gsk_dOqsmVsIdGCNummtsnEx", "WGdyb3FY9nrGCVTjVyMBQeUrvCaOe8PQ"].join("");
+  import.meta.env.VITE_OPENROUTER_API_KEY ||
+  import.meta.env.VITE_GEMINI_API_KEY ||
+  "";
 
 export default function App() {
   const [selectedWorkflow, setSelectedWorkflow] = useState(PRESET_WORKFLOWS[0]);
   const [selectedModel, setSelectedModel] = useState("llama-3.3-70b-versatile");
   const [customPrompt, setCustomPrompt] = useState("");
-  const [apiKey, setApiKey] = useState(DEFAULT_GROQ_KEY);
+  const [apiKey, setApiKey] = useState(getPreferredApiKey());
   const [isProcessing, setIsProcessing] = useState(false);
   const [activeOutput, setActiveOutput] = useState(PRESET_WORKFLOWS[0].output);
   const [copied, setCopied] = useState(false);
+  const [isPremiumUnlocked, setIsPremiumUnlocked] = useState(false);
+  const [selectedGateway, setSelectedGateway] = useState<"PayPal" | "Chime" | "Binance" | "">(
+    "",
+  );
 
   const sanitizeInput = (str: string) => str.replace(/[<>]/g, "");
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const stored = window.localStorage.getItem("ai-suite-premium");
+    if (!stored) return;
+
+    try {
+      const parsed = JSON.parse(stored) as {
+        unlocked?: boolean;
+        gateway?: "PayPal" | "Chime" | "Binance";
+      };
+      if (parsed.unlocked) {
+        setIsPremiumUnlocked(true);
+        setSelectedGateway(parsed.gateway || "");
+      }
+    } catch {
+      // ignore malformed data
+    }
+  }, []);
+
+  const handlePaymentRequest = (method: string) => {
+    const subject = encodeURIComponent(`AI Upgrade Payment Request - ${method}`);
+    const body = encodeURIComponent(
+      `Hi Pradip,\n\nI would like to purchase premium AI workflow access, extra model usage, or custom development support.\n\nPreferred payment method: ${method}\n\nPlease share secure payment instructions and confirmation steps.\n`,
+    );
+
+    window.location.href = `mailto:panthapradip31@gmail.com?subject=${subject}&body=${body}`;
+  };
+
+  const handlePremiumUnlock = (gateway: "PayPal" | "Chime" | "Binance") => {
+    setSelectedGateway(gateway);
+    setIsPremiumUnlocked(true);
+    window.localStorage.setItem(
+      "ai-suite-premium",
+      JSON.stringify({ unlocked: true, gateway }),
+    );
+  };
+
+  const handleGatewaySelect = (gateway: "PayPal" | "Chime" | "Binance") => {
+    handlePremiumUnlock(gateway);
+    handlePaymentRequest(gateway);
+  };
 
   const handleRunWorkflow = (workflow = selectedWorkflow) => {
     setSelectedWorkflow(workflow);
@@ -89,8 +138,20 @@ export default function App() {
     const targetModelObj = AI_MODELS.find((m) => m.id === selectedModel);
     const isGroq = targetModelObj?.provider === "groq";
 
-    const effectiveKey =
-      apiKey.trim() || (isGroq ? DEFAULT_GROQ_KEY : import.meta.env.VITE_OPENROUTER_API_KEY || "");
+    const effectiveKey = isPremiumUnlocked
+      ? apiKey.trim() || getPreferredApiKey()
+      : "";
+
+    if (!isPremiumUnlocked || !effectiveKey) {
+      setTimeout(() => {
+        setActiveOutput(`// Demo Mode Output [Model: ${selectedModel}]
+// Upgrade to unlock live LLM execution and premium workflow routing.
+${getAssistantReply(cleanPrompt, "developer workspace", "developer")}`);
+        setIsProcessing(false);
+        setCustomPrompt("");
+      }, 900);
+      return;
+    }
 
     const endpoint = isGroq
       ? "https://api.groq.com/openai/v1/chat/completions"
@@ -138,13 +199,10 @@ export default function App() {
     }
 
     setTimeout(() => {
+      const fallbackReply = getAssistantReply(cleanPrompt, "developer workspace", "developer");
       setActiveOutput(`// ${isGroq ? "GroqCloud" : "OpenRouter"} Inference Output [Model: ${selectedModel}]
 // Query: "${cleanPrompt}"
-export async function executeAiGeneratedPipeline() {
-  // Engine: ${isGroq ? "Groq LPU Accelerator" : "OpenRouter"} (${selectedModel})
-  // Code generation verified with zero syntax errors.
-  return { status: "SUCCESS", latency: "${isGroq ? "4ms" : "18ms"}" };
-}`);
+${fallbackReply}`);
       setIsProcessing(false);
       setCustomPrompt("");
     }, 900);
@@ -187,6 +245,53 @@ export async function executeAiGeneratedPipeline() {
             </button>
           </div>
         </header>
+
+        <div className="mb-8 rounded-2xl border border-emerald-500/20 bg-emerald-500/10 p-5 backdrop-blur-xl">
+          <div className="flex items-center gap-2 text-emerald-300">
+            <ShieldCheck className="h-4 w-4" />
+            <span className="text-sm font-semibold">Secure AI Upgrade & Premium Feature Requests</span>
+          </div>
+          <p className="mt-2 text-sm text-slate-300">
+            Need extra AI capabilities, custom workflow support, or priority access for this demo?
+            Choose a secure payment method below and I will confirm the next steps privately.
+          </p>
+
+          <div className="mt-4 grid gap-3 md:grid-cols-3">
+            {([
+              ["PayPal", "Fast checkout for premium AI access"],
+              ["Chime", "Direct transfer arrangement for approved upgrades"],
+              ["Binance", "Crypto payment option for advanced support"],
+            ] as const).map(([name, description]) => (
+              <button
+                key={name}
+                type="button"
+                onClick={() => handleGatewaySelect(name)}
+                className={`rounded-xl border p-3 text-left transition-all ${
+                  selectedGateway === name
+                    ? "border-sky-400/60 bg-sky-500/10"
+                    : "border-slate-700 bg-slate-950/60 hover:border-sky-400/50"
+                }`}
+              >
+                <div className="flex items-center gap-2 text-white">
+                  <CreditCard className="h-4 w-4 text-sky-400" />
+                  <span className="text-sm font-semibold">{name}</span>
+                </div>
+                <p className="mt-1 text-xs text-slate-400">{description}</p>
+              </button>
+            ))}
+          </div>
+
+          {isPremiumUnlocked && (
+            <div className="mt-4 rounded-xl border border-sky-500/20 bg-slate-950/70 p-3 text-sm text-slate-300">
+              <p className="font-semibold text-sky-300">Unlocked features:</p>
+              <ul className="mt-2 list-disc space-y-1 pl-5 text-xs text-slate-400">
+                <li>Live LLM execution with your API key</li>
+                <li>Private premium workflow routing</li>
+                <li>Advanced developer prompts and support</li>
+              </ul>
+            </div>
+          )}
+        </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
           <div className="lg:col-span-5 space-y-6">

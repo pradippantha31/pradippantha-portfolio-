@@ -1,6 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { ProjectAIAssistant } from "../../components/ProjectAIAssistant";
+import { PremiumRequestPanel } from "../../components/PremiumRequestPanel";
 import {
   Kanban,
   Plus,
@@ -69,7 +71,7 @@ const INITIAL_TASKS: TaskItem[] = [
     title: "Final Deployment & GitHub Repository Verification",
     assignee: "Pradip Pantha",
     priority: "High",
-    status: "todo",
+    status: "done",
   },
 ];
 
@@ -151,7 +153,7 @@ function TaskWorkspaceApp() {
               onClick={() =>
                 alert("Productivity SaaS Billing: Team Seats ($9/seat/mo) - Active Workspace Plan")
               }
-              className="inline-flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-emerald-400 to-teal-500 px-3.5 py-1.5 text-xs font-bold text-slate-950 shadow-md hover:opacity-90 transition-opacity"
+              className="inline-flex items-center gap-1.5 rounded-xl bg-linear-to-r from-emerald-400 to-teal-500 px-3.5 py-1.5 text-xs font-bold text-slate-950 shadow-md hover:opacity-90 transition-opacity"
             >
               <span>🚀 Team Seats ($9/seat/mo)</span>
             </button>
@@ -163,12 +165,26 @@ function TaskWorkspaceApp() {
               <div className="h-2 w-full rounded-full bg-slate-800 overflow-hidden">
                 <div
                   style={{ width: `${progressPercentage}%` }}
-                  className="h-full rounded-full bg-gradient-to-r from-sky-400 via-teal-300 to-emerald-400 transition-all duration-500"
+                  className="h-full rounded-full bg-linear-to-r from-sky-400 via-teal-300 to-emerald-400 transition-all duration-500"
                 />
               </div>
             </div>
           </div>
         </header>
+
+        <div className="mb-8 space-y-6">
+          <ProjectAIAssistant
+            title="Sprint AI Coach"
+            context="Help visitors understand the sprint workspace, planning flow, and how to make delivery more efficient and secure."
+            placeholder="Ask for sprint advice, prioritization help, or process improvements..."
+            accent="from-purple-500 to-sky-500"
+          />
+
+          <PremiumRequestPanel
+            projectName="Sprint & Task Workspace"
+            description="Request premium sprint automation, team seat upgrades, or custom agile workflow support for this productivity demo."
+          />
+        </div>
 
         {/* Add Task Form */}
         <div className="rounded-2xl border border-slate-800 bg-slate-900/80 p-5 mb-8 backdrop-blur-xl">
@@ -212,7 +228,7 @@ function TaskWorkspaceApp() {
 
             <button
               type="submit"
-              className="w-full md:w-auto inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-purple-600 to-sky-500 px-6 py-2.5 text-xs font-bold text-white shadow-lg hover:opacity-90 transition-opacity"
+              className="w-full md:w-auto inline-flex items-center justify-center gap-2 rounded-xl bg-linear-to-r from-purple-600 to-sky-500 px-6 py-2.5 text-xs font-bold text-white shadow-lg hover:opacity-90 transition-opacity"
             >
               <Plus className="h-4 w-4" />
               Add Task Card

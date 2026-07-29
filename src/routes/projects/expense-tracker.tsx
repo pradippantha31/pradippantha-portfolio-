@@ -1,6 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { ProjectAIAssistant } from "../../components/ProjectAIAssistant";
+import { PremiumRequestPanel } from "../../components/PremiumRequestPanel";
 import {
   DollarSign,
   Plus,
@@ -129,7 +131,7 @@ function ExpenseTrackerApp() {
               onClick={() =>
                 alert("SaaS Checkout: Upgrading to Pro Plan ($19/mo) with Stripe Integration...")
               }
-              className="inline-flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 px-4 py-2 text-xs font-bold text-slate-950 shadow-lg hover:opacity-90 transition-opacity"
+              className="inline-flex items-center gap-1.5 rounded-xl bg-linear-to-r from-amber-500 to-orange-500 px-4 py-2 text-xs font-bold text-slate-950 shadow-lg hover:opacity-90 transition-opacity"
             >
               <span>⚡ Upgrade to Pro SaaS ($19/mo)</span>
             </button>
@@ -186,6 +188,20 @@ function ExpenseTrackerApp() {
             <p className="text-3xl font-extrabold text-white">{expenses.length}</p>
             <p className="text-xs text-slate-500 mt-3">Active tracking session</p>
           </div>
+        </div>
+
+        <div className="mb-8 space-y-6">
+          <ProjectAIAssistant
+            title="Expense AI Advisor"
+            context="Help visitors understand the expense tracker, its business value, and how to improve budgeting workflows securely."
+            placeholder="Ask about budgeting, reporting, or cost control..."
+            accent="from-amber-500 to-orange-500"
+          />
+
+          <PremiumRequestPanel
+            projectName="Expense Tracker Dashboard"
+            description="Request premium analytics, forecasting upgrades, or dedicated budgeting support for this live app demo."
+          />
         </div>
 
         {/* Main Grid: Form + Transactions */}

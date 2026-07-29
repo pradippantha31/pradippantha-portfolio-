@@ -12,6 +12,7 @@ import { ExperienceSection } from "../components/ExperienceSection";
 import { ContactSection } from "../components/ContactSection";
 import { Footer } from "../components/Footer";
 import { ChatbotWidget } from "../components/ChatbotWidget";
+import { ProjectAIAssistant } from "../components/ProjectAIAssistant";
 
 export const Route = createFileRoute("/")({
   component: PortfolioApp,

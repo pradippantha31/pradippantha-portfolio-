@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { getAssistantReply } from "../lib/assistantResponses";
 import {
   MessageSquare,
   X,
@@ -63,7 +64,7 @@ export function ChatbotWidget() {
     }
   }, [messages, isOpen, isTyping]);
 
-  const handleSendMessage = (textToSend?: string) => {
+  const handleSendMessage = async (textToSend?: string) => {
     const query = textToSend || input.trim();
     if (!query) return;
 
@@ -78,30 +79,32 @@ export function ChatbotWidget() {
     if (!textToSend) setInput("");
     setIsTyping(true);
 
-    // AI Response generation logic
-    setTimeout(() => {
-      let botResponse = "";
-      const lower = query.toLowerCase();
+    try {
+      const response = await fetch("/api/assistant", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          prompt: query,
+          context:
+            "You are Pradip's portfolio assistant. Help visitors understand his skills, projects, and availability while staying concise, factual, and privacy-conscious.",
+          mode: "portfolio",
+        }),
+      });
 
-      if (lower.includes("skill") || lower.includes("talent") || lower.includes("stack")) {
-        botResponse =
-          "Pradip is a CS Scholar at Herald College Kathmandu specializing in Full-Stack Web Development (React 19, TypeScript, TanStack, Tailwind CSS), AI Prompt Engineering & LLM Tooling, and Agile Project Coordination (Trello/Sprint workflows).";
-      } else if (lower.includes("project") || lower.includes("saas") || lower.includes("app")) {
-        botResponse =
-          "Pradip has built 3 live interactive SaaS platforms:\n1. Expense Tracking App ($19/mo Pro SaaS)\n2. Task & Sprint Workspace ($9/seat/mo Productivity SaaS)\n3. AI Developer Workspace & Workflow Suite ($29/mo AI IaaS). All source repos are on his GitHub!";
-      } else if (
-        lower.includes("contact") ||
-        lower.includes("email") ||
-        lower.includes("hire") ||
-        lower.includes("work") ||
-        lower.includes("message")
-      ) {
-        botResponse =
-          "Pradip is available for Engineering, AI Prompting, and Project Coordination roles! You can email him directly at panthapradip31@gmail.com or fill out the quick message form below to dispatch an email immediately.";
-      } else {
-        botResponse =
-          "Thanks for reaching out! Pradip is passionate about collaborating on innovative software projects. Would you like to leave your contact details so Pradip can email you directly?";
+      const text = await response.text();
+      let data: { answer?: string } | null = null;
+
+      try {
+        data = text ? JSON.parse(text) : null;
+      } catch {
+        data = null;
       }
+
+      const botResponse =
+        data?.answer ||
+        (response.ok
+          ? "I can help you explore Pradip's portfolio in more detail."
+          : getAssistantReply(query, "You are Pradip's portfolio assistant.", "portfolio"));
 
       const botMsg: Message = {
         id: (Date.now() + 1).toString(),
@@ -111,8 +114,17 @@ export function ChatbotWidget() {
       };
 
       setMessages((prev) => [...prev, botMsg]);
+    } catch {
+      const fallbackMsg: Message = {
+        id: (Date.now() + 2).toString(),
+        sender: "bot",
+        text: "The secure assistant is briefly unavailable, but I can still help you contact Pradip directly through the form below.",
+        time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+      };
+      setMessages((prev) => [...prev, fallbackMsg]);
+    } finally {
       setIsTyping(false);
-    }, 900);
+    }
   };
 
   const handleSendDirectEmail = (e: React.FormEvent) => {

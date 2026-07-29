@@ -4,11 +4,14 @@ import { motion } from "framer-motion";
 interface MagneticButtonProps {
   children: React.ReactNode;
   className?: string;
-  onClick?: (e: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement>) => void;
+  onClick?: (e: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement | HTMLDivElement>) => void;
   href?: string;
   target?: string;
   rel?: string;
   ariaLabel?: string;
+  type?: "button" | "submit" | "reset";
+  disabled?: boolean;
+  asDiv?: boolean;
 }
 
 export function MagneticButton({
@@ -19,13 +22,16 @@ export function MagneticButton({
   target,
   rel,
   ariaLabel,
+  type = "button",
+  disabled = false,
+  asDiv = false,
 }: MagneticButtonProps) {
   const ref = useRef<HTMLDivElement>(null);
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [ripples, setRipples] = useState<{ x: number; y: number; id: number }[]>([]);
 
   const handleMouseMove = (e: React.MouseEvent) => {
-    if (!ref.current) return;
+    if (disabled || !ref.current) return;
     const { left, top, width, height } = ref.current.getBoundingClientRect();
     const centerX = left + width / 2;
     const centerY = top + height / 2;
@@ -40,7 +46,8 @@ export function MagneticButton({
     setPosition({ x: 0, y: 0 });
   };
 
-  const handleClick = (e: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement>) => {
+  const handleClick = (e: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement | HTMLDivElement>) => {
+    if (disabled) return;
     if (ref.current) {
       const rect = ref.current.getBoundingClientRect();
       const x = e.clientX - rect.left;
@@ -60,7 +67,7 @@ export function MagneticButton({
       onMouseLeave={handleMouseLeave}
       animate={{ x: position.x, y: position.y }}
       transition={{ type: "spring", stiffness: 200, damping: 15, mass: 0.1 }}
-      className={`relative overflow-hidden ${className}`}
+      className="relative overflow-hidden w-full h-full"
     >
       {children}
       {ripples.map((r) => (
@@ -81,10 +88,22 @@ export function MagneticButton({
         rel={rel}
         aria-label={ariaLabel}
         onClick={handleClick}
-        className="inline-block"
+        className={`inline-block ${className}`}
       >
         {content}
       </a>
+    );
+  }
+
+  if (asDiv) {
+    return (
+      <div
+        aria-label={ariaLabel}
+        onClick={handleClick}
+        className={`inline-block ${className}`}
+      >
+        {content}
+      </div>
     );
   }
 
@@ -92,8 +111,9 @@ export function MagneticButton({
     <button
       aria-label={ariaLabel}
       onClick={handleClick}
-      type="button"
-      className="inline-block bg-transparent p-0 border-none cursor-pointer"
+      type={type}
+      disabled={disabled}
+      className={`inline-block bg-transparent p-0 border-none cursor-pointer ${className}`}
     >
       {content}
     </button>
