@@ -21,9 +21,21 @@ interface Expense {
 }
 
 const INITIAL_EXPENSES: Expense[] = [
-  { id: "1", title: "Cloud Hosting & Vercel", amount: 45, category: "Infrastructure", date: "2025-02-15" },
+  {
+    id: "1",
+    title: "Cloud Hosting & Vercel",
+    amount: 45,
+    category: "Infrastructure",
+    date: "2025-02-15",
+  },
   { id: "2", title: "Figma Team Subscription", amount: 25, category: "Design", date: "2025-02-14" },
-  { id: "3", title: "Database Compute (Supabase)", amount: 30, category: "Infrastructure", date: "2025-02-10" },
+  {
+    id: "3",
+    title: "Database Compute (Supabase)",
+    amount: 30,
+    category: "Infrastructure",
+    date: "2025-02-10",
+  },
   { id: "4", title: "Domain Registration", amount: 15, category: "Domain", date: "2025-02-05" },
   { id: "5", title: "Coffee & Team Meeting", amount: 22, category: "Team", date: "2025-02-01" },
 ];
@@ -40,9 +52,7 @@ export default function App() {
   const [category, setCategory] = useState("Infrastructure");
 
   const filteredExpenses =
-    selectedCategory === "All"
-      ? expenses
-      : expenses.filter((e) => e.category === selectedCategory);
+    selectedCategory === "All" ? expenses : expenses.filter((e) => e.category === selectedCategory);
 
   const totalSpent = expenses.reduce((sum, e) => sum + e.amount, 0);
   const remaining = monthlyBudget - totalSpent;
@@ -92,7 +102,9 @@ export default function App() {
 
           <div className="flex flex-wrap items-center gap-3">
             <button
-              onClick={() => alert("SaaS Checkout: Upgrading to Pro Plan ($19/mo) with Stripe Integration...")}
+              onClick={() =>
+                alert("SaaS Checkout: Upgrading to Pro Plan ($19/mo) with Stripe Integration...")
+              }
               className="inline-flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 px-4 py-2 text-xs font-bold text-slate-950 shadow-lg hover:opacity-90 transition-opacity"
             >
               <span>⚡ Upgrade to Pro SaaS ($19/mo)</span>
@@ -131,10 +143,14 @@ export default function App() {
               <span>Remaining Budget</span>
               <PieChart className="h-4 w-4 text-sky-400" />
             </div>
-            <p className={`text-3xl font-extrabold ${remaining < 0 ? "text-rose-400" : "text-emerald-400"}`}>
+            <p
+              className={`text-3xl font-extrabold ${remaining < 0 ? "text-rose-400" : "text-emerald-400"}`}
+            >
               ${remaining.toFixed(2)}
             </p>
-            <p className="text-xs text-slate-500 mt-3">{percentageSpent}% of ${monthlyBudget} used</p>
+            <p className="text-xs text-slate-500 mt-3">
+              {percentageSpent}% of ${monthlyBudget} used
+            </p>
           </div>
 
           <div className="rounded-2xl border border-slate-800 bg-slate-900/80 p-5 backdrop-blur-xl">
@@ -156,7 +172,9 @@ export default function App() {
 
             <form onSubmit={handleAddExpense} className="space-y-4">
               <div>
-                <label className="block text-xs font-semibold text-slate-400 mb-1">Title / Vendor</label>
+                <label className="block text-xs font-semibold text-slate-400 mb-1">
+                  Title / Vendor
+                </label>
                 <input
                   type="text"
                   required
@@ -168,7 +186,9 @@ export default function App() {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-400 mb-1">Amount ($)</label>
+                <label className="block text-xs font-semibold text-slate-400 mb-1">
+                  Amount ($)
+                </label>
                 <input
                   type="number"
                   step="0.01"
@@ -209,7 +229,8 @@ export default function App() {
                 PM Sprint Note (2025)
               </h3>
               <p className="text-xs text-slate-400 leading-relaxed">
-                Project manager workflow: Tasks split into weekly cards on Trello. Clean separation between UI state, data calculation, and user documentation.
+                Project manager workflow: Tasks split into weekly cards on Trello. Clean separation
+                between UI state, data calculation, and user documentation.
               </p>
             </div>
           </div>
@@ -260,7 +281,9 @@ export default function App() {
                     </div>
 
                     <div className="flex items-center gap-4">
-                      <span className="text-sm font-extrabold text-white">${exp.amount.toFixed(2)}</span>
+                      <span className="text-sm font-extrabold text-white">
+                        ${exp.amount.toFixed(2)}
+                      </span>
                       <button
                         onClick={() => handleDeleteExpense(exp.id)}
                         className="p-1.5 text-slate-500 hover:text-rose-400 transition-colors"

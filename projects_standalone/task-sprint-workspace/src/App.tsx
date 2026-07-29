@@ -1,10 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import {
-  Kanban,
-  Plus,
-  MoveRight,
-} from "lucide-react";
+import { Kanban, Plus, MoveRight } from "lucide-react";
 
 interface TaskItem {
   id: string;
@@ -15,11 +11,41 @@ interface TaskItem {
 }
 
 const INITIAL_TASKS: TaskItem[] = [
-  { id: "proj-1", title: "Expense Tracking App — SaaS Budgeting Engine", assignee: "Pradip Pantha", priority: "High", status: "done" },
-  { id: "proj-2", title: "Task & Sprint Coordination Workspace — Productivity Engine", assignee: "Pradip Pantha", priority: "High", status: "done" },
-  { id: "proj-3", title: "AI Developer Workspace & Workflow Suite — AI Tooling", assignee: "Pradip Pantha", priority: "High", status: "in-progress" },
-  { id: "proj-4", title: "Sprint Check-In & Trello Backlog Alignment", assignee: "Pradip Pantha", priority: "Medium", status: "review" },
-  { id: "proj-5", title: "Final Deployment & GitHub Repository Verification", assignee: "Pradip Pantha", priority: "High", status: "todo" },
+  {
+    id: "proj-1",
+    title: "Expense Tracking App — SaaS Budgeting Engine",
+    assignee: "Pradip Pantha",
+    priority: "High",
+    status: "done",
+  },
+  {
+    id: "proj-2",
+    title: "Task & Sprint Coordination Workspace — Productivity Engine",
+    assignee: "Pradip Pantha",
+    priority: "High",
+    status: "done",
+  },
+  {
+    id: "proj-3",
+    title: "AI Developer Workspace & Workflow Suite — AI Tooling",
+    assignee: "Pradip Pantha",
+    priority: "High",
+    status: "in-progress",
+  },
+  {
+    id: "proj-4",
+    title: "Sprint Check-In & Trello Backlog Alignment",
+    assignee: "Pradip Pantha",
+    priority: "Medium",
+    status: "review",
+  },
+  {
+    id: "proj-5",
+    title: "Final Deployment & GitHub Repository Verification",
+    assignee: "Pradip Pantha",
+    priority: "High",
+    status: "todo",
+  },
 ];
 
 const COLUMNS = [
@@ -65,7 +91,7 @@ export default function App() {
         if (t.status === "in-progress") return { ...t, status: "review" };
         if (t.status === "review") return { ...t, status: "done" };
         return t;
-      })
+      }),
     );
   };
 
@@ -88,7 +114,9 @@ export default function App() {
 
           <div className="flex flex-col items-start sm:items-end gap-2">
             <button
-              onClick={() => alert("Productivity SaaS Billing: Team Seats ($9/seat/mo) - Active Workspace Plan")}
+              onClick={() =>
+                alert("Productivity SaaS Billing: Team Seats ($9/seat/mo) - Active Workspace Plan")
+              }
               className="inline-flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-emerald-400 to-teal-500 px-3.5 py-1.5 text-xs font-bold text-slate-950 shadow-md hover:opacity-90 transition-opacity"
             >
               <span>🚀 Team Seats ($9/seat/mo)</span>
@@ -111,7 +139,9 @@ export default function App() {
         <div className="rounded-2xl border border-slate-800 bg-slate-900/80 p-5 mb-8 backdrop-blur-xl">
           <form onSubmit={handleAddTask} className="flex flex-col md:flex-row gap-4 items-end">
             <div className="flex-1">
-              <label className="block text-xs font-semibold text-slate-400 mb-1">New Task Description</label>
+              <label className="block text-xs font-semibold text-slate-400 mb-1">
+                New Task Description
+              </label>
               <input
                 type="text"
                 required
@@ -159,7 +189,10 @@ export default function App() {
           {COLUMNS.map((col) => {
             const colTasks = tasks.filter((t) => t.status === col.id);
             return (
-              <div key={col.id} className={`rounded-2xl border ${col.color} p-4 backdrop-blur-xl flex flex-col`}>
+              <div
+                key={col.id}
+                className={`rounded-2xl border ${col.color} p-4 backdrop-blur-xl flex flex-col`}
+              >
                 <div className="flex justify-between items-center pb-3 mb-4 border-b border-slate-800">
                   <h2 className="text-sm font-bold text-white">{col.label}</h2>
                   <span className="rounded-full bg-slate-800 px-2.5 py-0.5 text-xs font-semibold text-slate-400">
@@ -186,8 +219,8 @@ export default function App() {
                               t.priority === "High"
                                 ? "bg-rose-500/20 text-rose-300 border border-rose-500/40"
                                 : t.priority === "Medium"
-                                ? "bg-amber-500/20 text-amber-300 border border-amber-500/40"
-                                : "bg-slate-800 text-slate-400"
+                                  ? "bg-amber-500/20 text-amber-300 border border-amber-500/40"
+                                  : "bg-slate-800 text-slate-400"
                             }`}
                           >
                             {t.priority}

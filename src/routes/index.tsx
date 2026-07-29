@@ -11,6 +11,7 @@ import { SkillsSection } from "../components/SkillsSection";
 import { ExperienceSection } from "../components/ExperienceSection";
 import { ContactSection } from "../components/ContactSection";
 import { Footer } from "../components/Footer";
+import { ChatbotWidget } from "../components/ChatbotWidget";
 
 export const Route = createFileRoute("/")({
   component: PortfolioApp,
@@ -87,6 +88,9 @@ function PortfolioApp() {
 
         {/* Footer */}
         <Footer />
+
+        {/* AI Chatbot Assistant Widget */}
+        <ChatbotWidget />
       </div>
     </LenisProvider>
   );
