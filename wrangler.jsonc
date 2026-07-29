@@ -2,9 +2,12 @@
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "pradippantha-portfolio",
   "compatibility_date": "2026-07-25",
-  "observability": {
-    "enabled": true,
+  "main": "dist/server/index.js",
+  "assets": {
+    "directory": "dist/client"
   },
-  "main": "@tanstack/react-start/server-entry",
-  "compatibility_flags": ["nodejs_compat"],
+  "observability": {
+    "enabled": true
+  },
+  "compatibility_flags": ["nodejs_compat"]
 }
