@@ -93,10 +93,12 @@ export function Hero() {
 
           {/* Bio text */}
           <p className="mt-5 text-base sm:text-lg text-muted-foreground leading-relaxed max-w-2xl">
-            A Computer Science student at{" "}
-            <span className="text-foreground font-semibold">Herald College Kathmandu</span> with a
-            passion for building user-focused web applications, coordinating software projects, and
-            delivering reliable tech solutions.
+            A Computer Science Scholar at{" "}
+            <span className="text-foreground font-semibold">Herald College Kathmandu</span>{" "}
+            specializing in modern full-stack engineering, AI prompt optimization, and agile project
+            coordination. Dedicated to architecting high-performance web applications, streamlining
+            team workflows, and translating complex challenges into intuitive, scalable software
+            solutions.
           </p>
 
           {/* Meta Info Pills */}
